@@ -10,7 +10,7 @@ namespace ZeroMemoryAllocationLibrary
     using System.Buffers.Text;
     using System.Runtime.InteropServices;
 
-    public class GuidExtension
+    public static class GuidExtension
 	{
         private const byte ForwardSlashByte = (byte)'/';
         private const char ForwardSlashChar = '/';
