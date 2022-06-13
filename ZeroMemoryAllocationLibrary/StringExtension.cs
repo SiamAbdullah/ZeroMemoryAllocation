@@ -10,27 +10,30 @@ namespace ZeroMemoryAllocationLibrary
 
     public class StringExtension
     {
-        public static ReadOnlySpan<char> Parse(ref ReadOnlySpan<char> input, char separator)
+        public static ReadOnlySpan<char> Parse(ref ReadOnlySpan<char> inputStringSpan, char separator)
         {
-            if (input.IsEmpty)
+            if (inputStringSpan.IsEmpty)
             {
                 return ReadOnlySpan<char>.Empty;
             }
 
-            var index = input.IndexOf(separator);
-            ReadOnlySpan<char> output;
-            if (index == -1)
+            var separatorIndex = inputStringSpan.IndexOf(separator);
+
+            // if string starts with separator then separatorIndex will be 0. e.g: separator= ',' inputStringSpan = ","
+            if (separatorIndex == 0)
             {
-                output = input;
-                input = Span<char>.Empty;
-            }
-            else
-            {
-                output = input.Slice(start: 0, length: index);
-                input = input.Slice(start: index + 1);
+                inputStringSpan = inputStringSpan.Length == 1 ? ReadOnlySpan<char>.Empty : inputStringSpan.Slice(1);
+                return ReadOnlySpan<char>.Empty;
             }
 
-            return output;
+            /*  if separatorIndex is -1 that means seperator is not found
+             *     then originalString will be currentFieldSpan and make originalString empty
+             */
+            var currentSpanLen = separatorIndex == -1 ? inputStringSpan.Length : separatorIndex;
+            var currentFieldSpan = inputStringSpan.Slice(0, currentSpanLen);
+            inputStringSpan = inputStringSpan.Length <= currentSpanLen + 1 ? ReadOnlySpan<char>.Empty : inputStringSpan.Slice(currentSpanLen + 1);
+
+            return currentFieldSpan;
         }
     }
 }
