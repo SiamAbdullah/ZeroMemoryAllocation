@@ -8,9 +8,9 @@ namespace ZeroMemoryAllocationLibrary
 {
     using System;
 
-    public class StringExtension
+    public class StringExtensions
     {
-        public static ReadOnlySpan<char> Parse(ref ReadOnlySpan<char> inputStringSpan, char separator)
+        public static ReadOnlySpan<char> ParseNext(ref ReadOnlySpan<char> inputStringSpan, char separator)
         {
             if (inputStringSpan.IsEmpty)
             {
@@ -34,6 +34,27 @@ namespace ZeroMemoryAllocationLibrary
             inputStringSpan = inputStringSpan.Length <= currentSpanLen + 1 ? ReadOnlySpan<char>.Empty : inputStringSpan.Slice(currentSpanLen + 1);
 
             return currentFieldSpan;
+        }
+
+        public static void SplitOnce(ref ReadOnlySpan<char> inputStringSpan, char separator, ref ReadOnlySpan<char> part1, ref ReadOnlySpan<char> part2)
+        {
+            part1 = ReadOnlySpan<char>.Empty;
+            part2 = ReadOnlySpan<char>.Empty;
+
+            if (!inputStringSpan.IsEmpty)
+            {
+                var separatorIndex = inputStringSpan.IndexOf(separator);
+                if (separatorIndex == 0)
+                {
+                    part2 = inputStringSpan.Length == 1 ? ReadOnlySpan<char>.Empty : inputStringSpan.Slice(1);
+                }
+                else
+                {
+                    var currentSpanLen = separatorIndex == -1 ? inputStringSpan.Length : separatorIndex;
+                    part1 = inputStringSpan.Slice(0, currentSpanLen);
+                    part2 = inputStringSpan.Length <= currentSpanLen + 1 ? ReadOnlySpan<char>.Empty : inputStringSpan.Slice(currentSpanLen + 1);
+                }
+            }
         }
     }
 }

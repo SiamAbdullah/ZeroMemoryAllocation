@@ -21,7 +21,7 @@ namespace ZeroMemoryAllocation.Benchmark
             var inputSpan = input.AsSpan();
             while (inputSpan.Length > 0)
             {
-                var parsed = StringExtension.Parse(ref inputSpan, '.');
+                var parsed = StringExtensions.ParseNext(ref inputSpan, '.');
                 // Console.WriteLine($"parsed value:  {parsed.ToString()} remaining: {inputSpan}");
             }
         }
